@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenUV</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <h1>OpenUV</h1>
+    <div>
+      <p>
+        Please enter latitude and longitude coordinates (latitude between -90
+        and 90, longitude between -180 and 180):
+      </p>
+      <form method="GET" action="/uv">
+        <input
+          type="number"
+          name="lat"
+          placeholder="Latitude"
+          step="0.01"
+          required
+        />
+        <input
+          type="number"
+          name="lng"
+          placeholder="Longitude"
+          step="0.01"
+          required
+        />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    <% if (locals.error) { %>
+    <div class="error"><%= error %></div>
+    <% } %> <% if (locals.uv) { %>
+    <div class="result">
+      <h2>UV Index Information:</h2>
+      <p>
+        Current UV Index:
+        <span
+          class="<%= uv.result.uv >= 8 ? 'uv-high' : uv.result.uv >= 3 ? 'uv-medium' : 'uv-low' %>"
+        >
+          <%= uv.result.uv %>
+        </span>
+      </p>
+      <p>Max UV Index for Today: <%= uv.result.uv_max %></p>
+      <p>Sunrise: <%= uv.result.sun_info.sun_times.sunrise %></p>
+      <p>Sunset: <%= uv.result.sun_info.sun_times.sunset %></p>
+
+      <% if (uv.result.uv >= 8) { %>
+      <p class="uv-high">
+        Warning: UV levels are very high. It's recommended to stay indoors or
+        wear protective clothing and sunscreen.
+      </p>
+      <% } else if (uv.result.uv >= 3) { %>
+      <p class="uv-medium">
+        Caution: UV levels are moderate. It's advisable to wear sunglasses and
+        sunscreen.
+      </p>
+      <% } else { %>
+      <p class="uv-low">UV levels are low. No special protection is needed.</p>
+      <% } %>
+    </div>
+    <% } %>
+  </body>
+</html>
